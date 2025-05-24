@@ -30,6 +30,9 @@ public abstract class BaseEntity implements Serializable {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "deleted")
+    private boolean deleted;
+
     @Version
     private Integer version;
 
