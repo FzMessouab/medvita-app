@@ -1,9 +1,11 @@
-package com.medvita.backend.dtos;
+package com.medvita.backend.dto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class PurchaseRequest {
+public class PurchaseRequestDTO extends BaseRequestDTO {
     private Long clientId;
     private Long equipmentId;
     private int quantity;

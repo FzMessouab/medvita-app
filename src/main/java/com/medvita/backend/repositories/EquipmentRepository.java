@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface EquipmentRepository extends AbstractRepository<Equipment> {
+public interface EquipmentRepository extends AbstractRepository<Equipment,Long> {
     Page<Equipment> findAllByActiveTrue(Pageable pageable);
 
     @Query("SELECT e FROM Equipment e WHERE e.active = true AND " +

@@ -12,7 +12,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Equipment extends BaseEntity {
+public class Equipment extends BaseEntity<Long> {
+
     @Column(name = "nom", nullable = false)
     private String name;
 

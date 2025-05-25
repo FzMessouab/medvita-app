@@ -1,76 +1,94 @@
 package com.medvita.backend.services;
 
-
-import com.medvita.backend.dtos.PurchaseRequest;
-import com.medvita.backend.entities.Client;
-import com.medvita.backend.entities.Equipment;
-import com.medvita.backend.entities.Invoice;
-import com.medvita.backend.entities.Purchase;
+import com.medvita.backend.dto.PurchaseRequestDTO;
+import com.medvita.backend.dto.PurchaseResponseDTO;
+import com.medvita.backend.entities.*;
 import com.medvita.backend.enums.TransactionType;
+import com.medvita.backend.mappers.PurchaseMapper;
 import com.medvita.backend.repositories.PurchaseRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
-public class PurchaseService {
+public class PurchaseService extends AbstractService<
+        Purchase,
+        Long,
+        PurchaseRequestDTO,
+        PurchaseResponseDTO,
+        PurchaseRepository> {
 
-    private final PurchaseRepository purchaseRepository;
     private final EquipmentService equipmentService;
     private final ClientService clientService;
     private final InvoiceService invoiceService;
     private final TransactionService transactionService;
+    private final PurchaseMapper purchaseMapper;
 
     public PurchaseService(PurchaseRepository purchaseRepository,
                            EquipmentService equipmentService,
                            ClientService clientService,
                            InvoiceService invoiceService,
-                           TransactionService transactionService) {
-        this.purchaseRepository = purchaseRepository;
+                           TransactionService transactionService,
+                           PurchaseMapper purchaseMapper) {
+        super(purchaseRepository);
         this.equipmentService = equipmentService;
         this.clientService = clientService;
         this.invoiceService = invoiceService;
         this.transactionService = transactionService;
+        this.purchaseMapper = purchaseMapper;
     }
 
     @Transactional
-    public Purchase processPurchase(PurchaseRequest request) {
+    public PurchaseResponseDTO processPurchase(PurchaseRequestDTO request) {
+        // 1. Validate and fetch entities
         Client client = clientService.getById(request.getClientId());
         Equipment equipment = equipmentService.getById(request.getEquipmentId());
 
+        // 2. Check stock
         if (equipment.getStockQuantity() < request.getQuantity()) {
             throw new RuntimeException("Stock insuffisant pour cet équipement");
         }
 
-        double totalAmount = equipment.getPurchasePrice() * request.getQuantity();
+        // 3. Convert DTO to entity
+        Purchase purchase = purchaseMapper.toEntity(request);
+        purchase.setClient(client);
+        purchase.setEquipment(equipment);
+        purchase.setTotalAmount(equipment.getPurchasePrice() * request.getQuantity());
 
-        // Update stock
+        // 4. Update stock
         equipment.setStockQuantity(equipment.getStockQuantity() - request.getQuantity());
         equipmentService.update(equipment);
 
-        Purchase purchase = Purchase.builder()
-                .client(client)
-                .equipment(equipment)
-                .quantity(request.getQuantity())
-                .totalAmount(totalAmount)
-                .purchaseDate(LocalDateTime.now())
-                .paymentMethod(request.getPaymentMethod())
-                .build();
+        // 5. Save purchase
+        Purchase savedPurchase = repository.save(purchase);
 
-        Purchase savedPurchase = purchaseRepository.save(purchase);
-
-        // Generate invoice
+        // 6. Generate invoice
         Invoice invoice = invoiceService.generatePurchaseInvoice(savedPurchase);
+        savedPurchase.setInvoice(invoice);
 
-        // Record transaction
+        // 7. Record transaction
         transactionService.recordTransaction(
                 client,
-                totalAmount,
+                savedPurchase.getTotalAmount(),
                 TransactionType.ACHAT,
-                "Paiement pour achat d'équipement: " + equipment.getName()
+                "Achat d'équipement: " + equipment.getName()
         );
 
-        return savedPurchase;
+        // 8. Convert to response DTO
+        return purchaseMapper.toDto(savedPurchase);
     }
+
+    public List<Purchase> findByClientId(Long clientId, Integer lastDays) {
+        if (lastDays != null && lastDays > 0) {
+            LocalDateTime cutoffDate = LocalDateTime.now().minusDays(lastDays);
+            return repository.findByClientIdAndPurchaseDateAfter(clientId, cutoffDate);
+        }
+        return new ArrayList<Purchase>();
+    }
+
+
 }

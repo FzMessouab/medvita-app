@@ -1,14 +1,23 @@
 package com.medvita.backend.services;
 
+import com.medvita.backend.dto.ClientRequestDTO;
+import com.medvita.backend.dto.ClientResponseDTO;
 import com.medvita.backend.entities.Client;
 import com.medvita.backend.repositories.ClientRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Service
-public class ClientService extends AbstractService<Client> {
+public class ClientService extends AbstractService<
+        Client,
+        Long,
+        ClientRequestDTO,
+        ClientResponseDTO,
+        ClientRepository
+        > {
 
     private final ClientRepository clientRepository;
 
@@ -31,21 +40,21 @@ public class ClientService extends AbstractService<Client> {
     }
 
     @Transactional
-    public Client desactiverClient(Long id) {
+    public Client deactivateClient(Long id) {
         Client client = getById(id);
         client.setActif(false);
         return clientRepository.save(client);
     }
 
-    public List<Client> rechercherClients(String recherche) {
+    public List<Client> searchClients(String recherche) {
         return clientRepository.rechercherClientsActifs(recherche);
     }
 
-    public List<Client> obtenirClientsActifs() {
+    public List<Client> getActifClients() {
         return clientRepository.findAllByActifTrue();
     }
 
-    public Client obtenirParEmail(String email) {
+    public Client getClientByEmail(String email) {
         return clientRepository.findByEmailAndActifTrue(email)
                 .orElseThrow(() -> new RuntimeException("Client non trouvé avec l'email: " + email));
     }

@@ -1,5 +1,7 @@
 package com.medvita.backend.services;
 
+import com.medvita.backend.dto.EquipmentRequestDTO;
+import com.medvita.backend.dto.EquipmentResponseDTO;
 import com.medvita.backend.entities.Equipment;
 import com.medvita.backend.repositories.EquipmentRepository;
 import org.springframework.data.domain.Page;
@@ -9,7 +11,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class EquipmentService extends AbstractService<Equipment> {
+public class EquipmentService extends AbstractService<Equipment,
+        Long,
+        EquipmentRequestDTO,
+        EquipmentResponseDTO,
+        EquipmentRepository> {
 
     private final EquipmentRepository equipmentRepository;
 
@@ -18,7 +24,7 @@ public class EquipmentService extends AbstractService<Equipment> {
         this.equipmentRepository = equipmentRepository;
     }
 
-    public Page<Equipment> listActiveEquipment(Pageable pageable) {
+    public Page<Equipment> getAvailableEquipment(Pageable pageable) {
         return equipmentRepository.findAllByActiveTrue(pageable);
     }
 

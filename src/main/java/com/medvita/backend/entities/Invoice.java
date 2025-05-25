@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Invoice extends BaseEntity {
+public class Invoice extends BaseEntity<Long> {
     @OneToOne
     @JoinColumn(name = "achat_id")
     private Purchase purchase;

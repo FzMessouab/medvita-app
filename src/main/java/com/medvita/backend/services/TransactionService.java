@@ -1,5 +1,6 @@
 package com.medvita.backend.services;
 
+import com.medvita.backend.dto.TransactionResponseDTO;
 import com.medvita.backend.entities.Client;
 import com.medvita.backend.entities.Transaction;
 import com.medvita.backend.enums.TransactionStatus;
@@ -13,11 +14,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
-public class TransactionService {
+public class TransactionService extends AbstractService<Transaction,Long, TransactionResponseDTO,TransactionResponseDTO,TransactionRepository>{
 
     private final TransactionRepository transactionRepository;
 
     public TransactionService(TransactionRepository transactionRepository) {
+        super(transactionRepository);
         this.transactionRepository = transactionRepository;
     }
 

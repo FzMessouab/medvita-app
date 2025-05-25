@@ -10,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Client extends BaseEntity {
+public class Client extends BaseEntity<Long> {
 
     @Column(name = "nom_complet", nullable = false)
     @NotBlank(message = "Le nom complet est obligatoire")

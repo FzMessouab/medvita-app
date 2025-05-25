@@ -1,7 +1,12 @@
 package com.medvita.backend.entities;
 
+import com.medvita.backend.enums.PaymentMethod;
+import com.medvita.backend.enums.PaymentStatus;
+import com.medvita.backend.enums.RentalStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+
 import java.time.LocalDate;
 
 @Entity
@@ -10,7 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Rental extends BaseEntity {
+public class Rental extends BaseEntity<Long> {
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
@@ -18,6 +23,12 @@ public class Rental extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "equipement_id", nullable = false)
     private Equipment equipment;
+
+    @Column(name = "date_location", nullable = false)
+    private LocalDate rentalDate;
+
+    @Column(name = "qte",nullable = false)
+    private Integer quantity=1;
 
     @Column(name = "date_debut", nullable = false)
     private LocalDate startDate;
@@ -29,8 +40,11 @@ public class Rental extends BaseEntity {
     private double totalAmount;
 
     @Column(name = "statut_paiement", nullable = false)
-    private String paymentStatus;
+    private PaymentStatus paymentStatus;
 
     @Column(name = "statut_location", nullable = false)
-    private String rentalStatus;
+    private RentalStatus rentalStatus;
+
+    @Column(name = "mode_paiement", nullable = false)
+    private PaymentMethod paymentMethod;
 }

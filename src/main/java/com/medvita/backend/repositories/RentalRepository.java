@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface RentalRepository extends AbstractRepository<Rental> {
+public interface RentalRepository extends AbstractRepository<Rental,Long> {
     @Query("SELECT r FROM Rental r WHERE r.equipment.id = :equipmentId " +
             "AND r.rentalStatus = 'ACTIVE' " +
             "AND ((r.startDate <= :endDate AND r.endDate >= :startDate))")

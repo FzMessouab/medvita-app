@@ -14,13 +14,13 @@ import java.util.Objects;
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseEntity implements Serializable {
+public abstract class BaseEntity<ID> implements Serializable {
 
     // Getters and Setters
     @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private ID id;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)

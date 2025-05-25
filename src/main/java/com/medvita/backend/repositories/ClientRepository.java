@@ -14,7 +14,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ClientRepository extends AbstractRepository<Client> {
+public interface ClientRepository extends AbstractRepository<
+        Client,
+        Long
+        > {
 
     Optional<Client> findByEmailAndActifTrue(String email);
 

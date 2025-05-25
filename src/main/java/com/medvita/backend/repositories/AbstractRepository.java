@@ -11,22 +11,24 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.query.Param;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
 @NoRepositoryBean
-public interface AbstractRepository<T extends BaseEntity> extends JpaRepository<T, Long>, JpaSpecificationExecutor<T> {
+public interface AbstractRepository<E extends BaseEntity<ID>, ID extends Serializable>
+        extends JpaRepository<E, ID>, JpaSpecificationExecutor<E> {
 
     @Query("SELECT e FROM #{#entityName} e WHERE e.id = :id AND e.deleted = false")
-    Optional<T> findActiveById(@Param("id") Long id);
+    Optional<E> findActiveById(@Param("id") ID id);
 
     @Query("SELECT e FROM #{#entityName} e WHERE e.deleted = false")
-    List<T> findAllActive();
+    List<E> findAllActive();
 
     @Query("UPDATE #{#entityName} e SET e.deleted = true WHERE e.id = :id")
     @Modifying
     @Transactional
-    void softDelete(@Param("id") Long id);
+    void softDelete(@Param("id") ID id);
 
-    Page<T> findAllByDeletedFalse(Pageable pageable);
+    Page<E> findAllByDeletedFalse(Pageable pageable);
 }

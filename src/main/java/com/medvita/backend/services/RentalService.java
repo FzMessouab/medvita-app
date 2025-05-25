@@ -1,10 +1,13 @@
 package com.medvita.backend.services;
 
 
-import com.medvita.backend.dtos.RentalRequest;
+import com.medvita.backend.dto.RentalRequestDTO;
+import com.medvita.backend.dto.RentalResponseDTO;
 import com.medvita.backend.entities.Client;
 import com.medvita.backend.entities.Equipment;
 import com.medvita.backend.entities.Rental;
+import com.medvita.backend.enums.PaymentStatus;
+import com.medvita.backend.enums.RentalStatus;
 import com.medvita.backend.repositories.RentalRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +17,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
-public class RentalService {
+public class RentalService extends AbstractService
+<Rental,Long,RentalRequestDTO, RentalResponseDTO,RentalRepository>
+{
 
     private final RentalRepository rentalRepository;
     private final EquipmentService equipmentService;
@@ -25,6 +30,7 @@ public class RentalService {
                          EquipmentService equipmentService,
                          ClientService clientService,
                          InvoiceService invoiceService) {
+        super(rentalRepository);
         this.rentalRepository = rentalRepository;
         this.equipmentService = equipmentService;
         this.clientService = clientService;
@@ -32,7 +38,7 @@ public class RentalService {
     }
 
     @Transactional
-    public Rental createRental(RentalRequest request) {
+    public Rental createRental(RentalRequestDTO request) {
         Client client = clientService.getById(request.getClientId());
         Equipment equipment = equipmentService.getById(request.getEquipmentId());
 
@@ -48,8 +54,8 @@ public class RentalService {
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
                 .totalAmount(totalAmount)
-                .paymentStatus("PENDING")
-                .rentalStatus("ACTIVE")
+                .paymentStatus(PaymentStatus.PENDING)
+                .rentalStatus(RentalStatus.ACTIVE)
                 .build();
 
         Rental savedRental = rentalRepository.save(rental);
@@ -71,4 +77,26 @@ public class RentalService {
     public List<Rental> getClientRentals(Long clientId) {
         return rentalRepository.findByClientId(clientId);
     }
+
+    @Transactional
+    public Rental cancelRental(Long rentalId) {
+        Rental rental = this.getById(rentalId);
+
+        if (rental.getPaymentStatus() == PaymentStatus.PENDING) {
+            rental.setPaymentStatus(PaymentStatus.CANCELLED);
+            return rentalRepository.save(rental);
+        } else {
+            throw new IllegalStateException("Cannot cancel a rental that is not in PENDING status.");
+        }
+    }
+
+
+
+
+
+
+
+
+
+
 }
