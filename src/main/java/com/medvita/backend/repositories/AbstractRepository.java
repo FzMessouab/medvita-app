@@ -11,12 +11,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.query.Param;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
 @NoRepositoryBean
-public interface AbstractRepository<E extends BaseEntity<ID>, ID extends Serializable>
+public interface AbstractRepository<E extends BaseEntity<ID>, ID>
         extends JpaRepository<E, ID>, JpaSpecificationExecutor<E> {
 
     @Query("SELECT e FROM #{#entityName} e WHERE e.id = :id AND e.deleted = false")

@@ -16,6 +16,11 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class Rental extends BaseEntity<Long> {
+
+    @Column(nullable = false,unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long rentalId;
+
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
@@ -47,4 +52,9 @@ public class Rental extends BaseEntity<Long> {
 
     @Column(name = "mode_paiement", nullable = false)
     private PaymentMethod paymentMethod;
+
+    @Override
+    public Long getId() {
+        return rentalId;
+    }
 }

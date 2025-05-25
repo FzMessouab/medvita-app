@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public abstract class AbstractService<
         E extends BaseEntity<ID>,
-        ID extends Serializable,
+        ID,
         D extends BaseDTO,
         R extends BaseResponseDTO,
         REPO extends AbstractRepository<E, ID>> {

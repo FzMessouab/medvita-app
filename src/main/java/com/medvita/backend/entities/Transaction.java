@@ -13,6 +13,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class Transaction extends BaseEntity<Long> {
+
+
+    @Column(nullable = false, unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long transactionId;
+
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
@@ -33,4 +39,9 @@ public class Transaction extends BaseEntity<Long> {
     @Column(name = "statut", nullable = false)
     @Enumerated(EnumType.STRING)
     private TransactionStatus status; // "COMPLETED", "FAILED", "PENDING"
+
+    @Override
+    public Long getId() {
+        return transactionId;
+    }
 }

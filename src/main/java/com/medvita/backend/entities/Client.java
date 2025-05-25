@@ -12,6 +12,10 @@ import lombok.*;
 @Builder
 public class Client extends BaseEntity<Long> {
 
+    @Column(unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long clientId;
+
     @Column(name = "nom_complet", nullable = false)
     @NotBlank(message = "Le nom complet est obligatoire")
     private String fullName;
@@ -48,4 +52,8 @@ public class Client extends BaseEntity<Long> {
     @Column(name = "actif", nullable = false)
     private boolean actif = true;
 
+    @Override
+    public Long getId() {
+        return clientId;
+    }
 }

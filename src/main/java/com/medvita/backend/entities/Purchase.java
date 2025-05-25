@@ -11,6 +11,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class Purchase extends BaseEntity<Long> {
+
+    @Column(unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long purchaseId;
+
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
@@ -33,4 +38,9 @@ public class Purchase extends BaseEntity<Long> {
 
     @OneToOne(mappedBy = "purchase", cascade = CascadeType.ALL)
     private Invoice invoice;
+
+    @Override
+    public Long getId() {
+        return purchaseId;
+    }
 }

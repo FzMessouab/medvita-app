@@ -7,13 +7,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EnableJpaRepositories(basePackages = "com.medvita.backend.repositories")
-@EntityScan(basePackages = "com.medvita.backend.entities")
-@ComponentScan(basePackages = {
-        "com.medvita.backend.controllers",
-        "com.medvita.backend.services",
-        "com.medvita.backend.mappers"  // Make sure mappers package is scanned
-})
 public class MedvitaBackendApplication {
 
     public static void main(String[] args) {

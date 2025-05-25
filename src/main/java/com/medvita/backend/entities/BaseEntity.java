@@ -14,10 +14,9 @@ import java.util.Objects;
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseEntity<ID> implements Serializable {
+public abstract class BaseEntity<ID> {
 
     // Getters and Setters
-    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private ID id;
@@ -36,6 +35,8 @@ public abstract class BaseEntity<ID> implements Serializable {
     @Version
     private Integer version;
 
+    public abstract ID getId();
+
     // Equals and HashCode
     @Override
     public boolean equals(Object o) {
@@ -53,5 +54,9 @@ public abstract class BaseEntity<ID> implements Serializable {
     // Status check methods
     public boolean isNew() {
         return this.id == null;
+    }
+
+    public void setId(ID id) {
+        this.id = id;
     }
 }

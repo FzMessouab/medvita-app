@@ -26,17 +26,23 @@ public class ClientService extends AbstractService<
         this.clientRepository = clientRepository;
     }
 
+
     @Override
     @Transactional
     public Client create(Client client) {
-        if (clientRepository.existsByEmailAndActifTrue(client.getEmail())) {
-            throw new RuntimeException("Un client avec cet email existe déjà");
-        }
-        if (client.getNumeroSecu() != null &&
-                clientRepository.existsByNumeroSecuAndActifTrue(client.getNumeroSecu())) {
-            throw new RuntimeException("Un client avec ce numéro de sécurité sociale existe déjà");
-        }
+        validateClientUniqueness(client);
+        client.setActif(true); // Ensure new clients are active
         return super.create(client);
+    }
+
+    private void validateClientUniqueness(Client client) {
+        if (repository.existsByEmailAndActifTrue(client.getEmail())) {
+            throw new RuntimeException("Un client actif avec cet email existe déjà");
+        }
+        if (client.getNumeroSecu() != null && !client.getNumeroSecu().isEmpty() &&
+                repository.existsByNumeroSecuAndActifTrue(client.getNumeroSecu())) {
+            throw new RuntimeException("Un client actif avec ce numéro de sécurité sociale existe déjà");
+        }
     }
 
     @Transactional

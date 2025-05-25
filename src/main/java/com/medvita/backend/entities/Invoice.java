@@ -11,6 +11,11 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class Invoice extends BaseEntity<Long> {
+
+    @Column(unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long invoiceId;
+
     @OneToOne
     @JoinColumn(name = "achat_id")
     private Purchase purchase;
@@ -33,4 +38,9 @@ public class Invoice extends BaseEntity<Long> {
 
     @Column(name = "chemin_fichier")
     private String filePath;
+
+    @Override
+    public Long getId() {
+        return invoiceId;
+    }
 }

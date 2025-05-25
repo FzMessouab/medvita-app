@@ -1,9 +1,9 @@
 package com.medvita.backend.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.UUID;
 
 @Entity
 @Table(name = "equipements")
@@ -13,6 +13,10 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Equipment extends BaseEntity<Long> {
+
+    @Column(unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long equipemenRef;
 
     @Column(name = "nom", nullable = false)
     private String name;
@@ -40,4 +44,9 @@ public class Equipment extends BaseEntity<Long> {
 
     @Column(name = "active", nullable = false)
     private boolean active = true;
+
+    @Override
+    public Long getId() {
+        return equipemenRef;
+    }
 }

@@ -15,7 +15,7 @@ import java.util.List;
 
 public abstract class AbstractController<
         E extends BaseEntity<ID>,
-        ID extends Serializable,
+        ID,
         D extends BaseDTO,
         R extends BaseResponseDTO,
         S extends AbstractService<E, ID, D, R, ?>>  {
@@ -58,4 +58,5 @@ public abstract class AbstractController<
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
 }
