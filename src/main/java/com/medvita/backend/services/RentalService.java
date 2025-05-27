@@ -6,6 +6,7 @@ import com.medvita.backend.dto.RentalResponseDTO;
 import com.medvita.backend.entities.Client;
 import com.medvita.backend.entities.Equipment;
 import com.medvita.backend.entities.Rental;
+import com.medvita.backend.enums.PaymentMethod;
 import com.medvita.backend.enums.PaymentStatus;
 import com.medvita.backend.enums.RentalStatus;
 import com.medvita.backend.repositories.RentalRepository;
@@ -56,6 +57,9 @@ public class RentalService extends AbstractService
                 .totalAmount(totalAmount)
                 .paymentStatus(PaymentStatus.PENDING)
                 .rentalStatus(RentalStatus.ACTIVE)
+                .quantity(request.getQuantity())
+                .rentalDate(LocalDate.now())
+                .paymentMethod(PaymentMethod.valueOf(request.getPaymentMethod()))
                 .build();
 
         Rental savedRental = rentalRepository.save(rental);

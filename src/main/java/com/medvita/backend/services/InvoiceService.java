@@ -1,6 +1,7 @@
 package com.medvita.backend.services;
 
 
+import com.itextpdf.text.DocumentException;
 import com.medvita.backend.dto.InvoiceResponseDTO;
 import com.medvita.backend.entities.Invoice;
 import com.medvita.backend.entities.Purchase;
@@ -48,7 +49,14 @@ public class InvoiceService extends AbstractService<Invoice,Long, InvoiceRespons
                 .build();
 
         // Generate PDF
-        String filePath = invoiceGenerator.generatePurchaseInvoice(invoice);
+        String filePath = null;
+        try {
+            filePath = invoiceGenerator.generatePurchaseInvoice(invoice);
+        } catch (DocumentException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         invoice.setFilePath(filePath);
 
         return invoiceRepository.save(invoice);
@@ -66,7 +74,14 @@ public class InvoiceService extends AbstractService<Invoice,Long, InvoiceRespons
                 .build();
 
         // Generate PDF
-        String filePath = invoiceGenerator.generatePurchaseInvoice(invoice);
+        String filePath = null;
+        try {
+            filePath = invoiceGenerator.generateRentalInvoice(invoice);
+        } catch (DocumentException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         invoice.setFilePath(filePath);
 
         return invoiceRepository.save(invoice);

@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
+@Setter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity<ID> {
@@ -51,5 +52,5 @@ public abstract class BaseEntity<ID> {
         return this.getId() == null;
     }
 
-  
+
 }

@@ -58,6 +58,7 @@ public class PurchaseService extends AbstractService<
         purchase.setClient(client);
         purchase.setEquipment(equipment);
         purchase.setTotalAmount(equipment.getPurchasePrice() * request.getQuantity());
+        purchase.setPurchaseDate(LocalDateTime.now());
 
         // 4. Update stock
         equipment.setStockQuantity(equipment.getStockQuantity() - request.getQuantity());
