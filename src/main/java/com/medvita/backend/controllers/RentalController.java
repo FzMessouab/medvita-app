@@ -35,13 +35,6 @@ public class RentalController {
         return ResponseEntity.created(location).body(response);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<RentalResponseDTO> getRentalById(@PathVariable Long id) {
-        return ResponseEntity.ok(
-                rentalMapper.toDto(rentalService.getById(id))
-        );
-    }
-
     @GetMapping("/client/{clientId}")
     public ResponseEntity<List<RentalResponseDTO>> getClientRentals(
             @PathVariable Long clientId) {

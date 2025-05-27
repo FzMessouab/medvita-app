@@ -12,9 +12,10 @@ import lombok.*;
 @Builder
 public class Client extends BaseEntity<Long> {
 
-    @Column(unique = true, nullable = false)
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long clientId;
+    @Column(name = "client_id")
+    private Long id;
 
     @Column(name = "nom_complet", nullable = false)
     @NotBlank(message = "Le nom complet est obligatoire")
@@ -54,6 +55,6 @@ public class Client extends BaseEntity<Long> {
 
     @Override
     public Long getId() {
-        return clientId;
+        return id;
     }
 }

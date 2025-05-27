@@ -5,6 +5,7 @@ import com.medvita.backend.dto.InvoiceResponseDTO;
 import com.medvita.backend.entities.Invoice;
 import com.medvita.backend.entities.Purchase;
 import com.medvita.backend.entities.Rental;
+import com.medvita.backend.enums.InvoiceStatus;
 import com.medvita.backend.enums.PaymentStatus;
 import com.medvita.backend.repositories.InvoiceRepository;
 import com.medvita.backend.utils.InvoiceGenerator;
@@ -43,7 +44,7 @@ public class InvoiceService extends AbstractService<Invoice,Long, InvoiceRespons
                 .invoiceNumber(invoiceNumber)
                 .issueDate(LocalDate.now())
                 .amount(purchase.getTotalAmount())
-                .status("PAYÉE")
+                .status(InvoiceStatus.PAID)
                 .build();
 
         // Generate PDF
@@ -61,7 +62,7 @@ public class InvoiceService extends AbstractService<Invoice,Long, InvoiceRespons
                 .invoiceNumber(invoiceNumber)
                 .issueDate(LocalDate.now())
                 .amount(rental.getTotalAmount())
-                .status(rental.getPaymentStatus().equals(PaymentStatus.PAID) ? "PAYÉE" : "EN_ATTENTE")
+                .status(rental.getPaymentStatus().equals(PaymentStatus.PAID) ? InvoiceStatus.PAID : InvoiceStatus.PENDING)
                 .build();
 
         // Generate PDF

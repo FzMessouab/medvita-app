@@ -23,11 +23,6 @@ public class InvoiceController extends AbstractController<Invoice,Long,InvoiceRe
         this.invoiceMapper = invoiceMapper;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<InvoiceResponseDTO> getInvoice(@PathVariable Long id) {
-        Invoice invoice = invoiceService.getById(id);
-        return ResponseEntity.ok(invoiceMapper.toDto(invoice));
-    }
 
     @GetMapping("/{id}/download")
     public ResponseEntity<Resource> downloadInvoice(@PathVariable Long id) {

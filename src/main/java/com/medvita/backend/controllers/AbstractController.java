@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
 
@@ -48,10 +47,13 @@ public abstract class AbstractController<
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<E> update(@PathVariable ID id, @RequestBody E entity) {
-        entity.setId(id);
+    public ResponseEntity<E> update(@PathVariable Long id, @RequestBody E entity) {
+        if (!id.equals(entity.getId())) {
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.ok(service.update(entity));
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable ID id) {

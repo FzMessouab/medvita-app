@@ -17,8 +17,9 @@ import java.time.LocalDate;
 @Builder
 public class Rental extends BaseEntity<Long> {
 
-    @Column(nullable = false,unique = true)
+    @Column(name = "rental_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     private Long rentalId;
 
     @ManyToOne
@@ -45,12 +46,15 @@ public class Rental extends BaseEntity<Long> {
     private double totalAmount;
 
     @Column(name = "statut_paiement", nullable = false)
+    @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
 
     @Column(name = "statut_location", nullable = false)
+    @Enumerated(EnumType.STRING)
     private RentalStatus rentalStatus;
 
     @Column(name = "mode_paiement", nullable = false)
+    @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
     @Override

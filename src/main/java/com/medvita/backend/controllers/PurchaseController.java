@@ -33,7 +33,8 @@ public class PurchaseController extends AbstractController<
         this.purchaseMapper = purchaseMapper;
     }
 
-    @PostMapping
+
+    @PostMapping("/process")
     public ResponseEntity<PurchaseResponseDTO> createPurchase(
             @Valid @RequestBody PurchaseRequestDTO requestDTO) {
         PurchaseResponseDTO response = purchaseService.processPurchase(requestDTO);
@@ -41,15 +42,6 @@ public class PurchaseController extends AbstractController<
         return ResponseEntity.created(location).body(response);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<PurchaseResponseDTO> getPurchase(@PathVariable Long id) {
-        return purchaseService.findById(id)
-                .map(purchase -> {
-                    PurchaseResponseDTO response = purchaseMapper.toDto(purchase);
-                    return ResponseEntity.ok(response);
-                })
-                .orElseThrow(() -> new RuntimeException("Purchase not found with id: " + id));
-    }
 
     @GetMapping("/client/{clientId}")
     public ResponseEntity<List<PurchaseResponseDTO>> getPurchaseByClientId(

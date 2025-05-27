@@ -1,5 +1,6 @@
 package com.medvita.backend.entities;
 
+import com.medvita.backend.enums.InvoiceStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
@@ -12,16 +13,17 @@ import java.time.LocalDate;
 @Builder
 public class Invoice extends BaseEntity<Long> {
 
-    @Column(unique = true, nullable = false)
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long invoiceId;
+    @Column(name = "invoice_id")  // Explicit column name
+    private Long id;
 
     @OneToOne
-    @JoinColumn(name = "achat_id")
+    @JoinColumn(name = "purchase_id")
     private Purchase purchase;
 
     @OneToOne
-    @JoinColumn(name = "location_id")
+    @JoinColumn(name = "rental_id")
     private Rental rental;
 
     @Column(name = "numero_facture", unique = true, nullable = false)
@@ -34,13 +36,14 @@ public class Invoice extends BaseEntity<Long> {
     private double amount;
 
     @Column(name = "statut", nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private InvoiceStatus status;
 
     @Column(name = "chemin_fichier")
     private String filePath;
 
     @Override
     public Long getId() {
-        return invoiceId;
+        return this.id;
     }
 }

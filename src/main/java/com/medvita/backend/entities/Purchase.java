@@ -1,5 +1,6 @@
 package com.medvita.backend.entities;
 
+import com.medvita.backend.enums.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -12,9 +13,10 @@ import java.time.LocalDateTime;
 @Builder
 public class Purchase extends BaseEntity<Long> {
 
-    @Column(unique = true, nullable = false)
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long purchaseId;
+    @Column(name = "purchase_id")  // Explicit column name
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
@@ -34,13 +36,14 @@ public class Purchase extends BaseEntity<Long> {
     private LocalDateTime purchaseDate;
 
     @Column(name = "methode_paiement", nullable = false)
-    private String paymentMethod;
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
 
-    @OneToOne(mappedBy = "purchase", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
     private Invoice invoice;
 
     @Override
     public Long getId() {
-        return purchaseId;
+        return this.id;
     }
 }

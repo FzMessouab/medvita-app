@@ -14,9 +14,10 @@ import java.util.UUID;
 @Builder
 public class Equipment extends BaseEntity<Long> {
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "equipement_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long equipemenRef;
+    @Id
+    private Long id;
 
     @Column(name = "nom", nullable = false)
     private String name;
@@ -47,6 +48,6 @@ public class Equipment extends BaseEntity<Long> {
 
     @Override
     public Long getId() {
-        return equipemenRef;
+        return id;
     }
 }

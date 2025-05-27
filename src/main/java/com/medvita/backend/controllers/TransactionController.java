@@ -22,13 +22,6 @@ public class TransactionController {
         this.transactionMapper = transactionMapper;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<TransactionResponseDTO> getTransaction(@PathVariable Long id) {
-        return ResponseEntity.ok(
-                transactionMapper.toDto(transactionService.getById(id))
-        );
-    }
-
     @GetMapping("/client/{clientId}")
     public ResponseEntity<Page<TransactionResponseDTO>> getClientTransactions(
             @PathVariable Long clientId,
