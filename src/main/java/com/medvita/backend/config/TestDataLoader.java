@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
-@Profile("dev")
 public class TestDataLoader implements CommandLineRunner {
 
     private final ClientRepository clientRepository;
