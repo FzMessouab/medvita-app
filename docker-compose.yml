@@ -27,6 +27,7 @@ services:
         condition: service_healthy
     environment:
       SERVER_PORT: 8080
+      APP_CORS_ALLOWED_ORIGINS: http://localhost:*,http://127.0.0.1:*,http://frontend:3000
       SPRING_PROFILES_ACTIVE: dev,docker
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/medical_equipment_db
       SPRING_DATASOURCE_USERNAME: postgres
@@ -38,6 +39,24 @@ services:
       - "8080:8080"
     volumes:
       - invoices-data:/app/invoices
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        BACKEND_API_URL: http://app:8080
+    container_name: medvita-frontend
+    depends_on:
+      app:
+        condition: service_started
+    environment:
+      PORT: 3000
+      NEXT_PUBLIC_API_URL: /backend-api
+      BACKEND_API_URL: http://app:8080
+    ports:
+      - "3000:3000"
     restart: unless-stopped
 
 volumes:

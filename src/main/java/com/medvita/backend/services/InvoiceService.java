@@ -3,6 +3,7 @@ package com.medvita.backend.services;
 
 import com.itextpdf.text.DocumentException;
 import com.medvita.backend.dto.InvoiceResponseDTO;
+import com.medvita.backend.entities.Client;
 import com.medvita.backend.entities.Invoice;
 import com.medvita.backend.entities.Purchase;
 import com.medvita.backend.entities.Rental;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -87,6 +89,33 @@ public class InvoiceService extends AbstractService<Invoice,Long, InvoiceRespons
         return invoiceRepository.save(invoice);
     }
 
+    public Invoice generateCartInvoice(Client client, List<Purchase> purchases, List<Rental> rentals) {
+        String invoiceNumber = "INV-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        double totalAmount = purchases.stream().mapToDouble(Purchase::getTotalAmount).sum()
+                + rentals.stream().mapToDouble(Rental::getTotalAmount).sum();
+
+        boolean hasPendingRental = rentals.stream()
+                .anyMatch(rental -> rental.getPaymentStatus() != PaymentStatus.PAID);
+
+        Invoice invoice = Invoice.builder()
+                .invoiceNumber(invoiceNumber)
+                .issueDate(LocalDate.now())
+                .amount(totalAmount)
+                .status(hasPendingRental ? InvoiceStatus.PENDING : InvoiceStatus.PAID)
+                .build();
+
+        Invoice savedInvoice = invoiceRepository.save(invoice);
+
+        try {
+            String filePath = invoiceGenerator.generateCartInvoice(savedInvoice, client, purchases, rentals);
+            savedInvoice.setFilePath(filePath);
+        } catch (DocumentException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return invoiceRepository.save(savedInvoice);
+    }
+
     public Resource downloadInvoiceFile(Long invoiceId) {
         Invoice invoice = invoiceRepository.findById(invoiceId)
                 .orElseThrow(() -> new EntityNotFoundException("Invoice not found with id: " + invoiceId));
@@ -98,5 +127,21 @@ public class InvoiceService extends AbstractService<Invoice,Long, InvoiceRespons
         }
 
         return new PathResource(path);
+    }
+
+    public Invoice getByPurchaseId(Long purchaseId) {
+        Invoice invoice = invoiceRepository.findByPurchaseId(purchaseId);
+        if (invoice == null) {
+            throw new EntityNotFoundException("Invoice not found for purchase id: " + purchaseId);
+        }
+        return invoice;
+    }
+
+    public Invoice getByRentalId(Long rentalId) {
+        Invoice invoice = invoiceRepository.findByRentalRentalId(rentalId);
+        if (invoice == null) {
+            throw new EntityNotFoundException("Invoice not found for rental id: " + rentalId);
+        }
+        return invoice;
     }
 }

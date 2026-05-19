@@ -35,7 +35,7 @@ public abstract class AbstractController<
         return ResponseEntity.ok(service.findAll(pageable));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:\\d+}")
     public ResponseEntity<E> findById(@PathVariable ID id) {
         return ResponseEntity.ok(service.getById(id));
     }
@@ -46,7 +46,7 @@ public abstract class AbstractController<
         return ResponseEntity.created(URI.create("/" + created.getId())).body(created);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id:\\d+}")
     public ResponseEntity<E> update(@PathVariable Long id, @RequestBody E entity) {
         if (!id.equals(entity.getId())) {
             return ResponseEntity.badRequest().build();
@@ -55,7 +55,7 @@ public abstract class AbstractController<
     }
 
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id:\\d+}")
     public ResponseEntity<Void> delete(@PathVariable ID id) {
         service.delete(id);
         return ResponseEntity.noContent().build();

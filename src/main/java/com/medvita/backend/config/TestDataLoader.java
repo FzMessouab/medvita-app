@@ -8,7 +8,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Component
 public class TestDataLoader implements CommandLineRunner {
@@ -33,14 +35,14 @@ public class TestDataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Only load data if database is empty
+        seedEquipmentCatalog();
+
         if (clientRepository.count() == 0) {
-            loadTestData();
+            loadDemoTransactions();
         }
     }
 
-    private void loadTestData() {
-        // Create Clients
+    private void loadDemoTransactions() {
         Client client1 = new Client();
         client1.setFullName("John Doe");
         client1.setEmail("john.doe@example.com");
@@ -68,27 +70,7 @@ public class TestDataLoader implements CommandLineRunner {
         client2.setActif(true);
 
         List<Client> clients = clientRepository.saveAll(List.of(client1, client2));
-
-        // Create Medical Equipment
-        Equipment equipment1 = new Equipment();
-        equipment1.setName("Wheelchair Standard");
-        equipment1.setDescription("Standard wheelchair for adult patients");
-        equipment1.setPurchasePrice(199.99);
-        equipment1.setStockQuantity(10);
-        equipment1.setCategory("Mobility");
-        equipment1.setDailyRentalPrice(69.76);
-        equipment1.setSafetyStandard("ISO 7176-1");
-
-        Equipment equipment2 = new Equipment();
-        equipment2.setName("Oxygen Concentrator");
-        equipment2.setDescription("5L Oxygen Concentrator with Nebulizer");
-        equipment2.setDailyRentalPrice(209.36);
-        equipment2.setPurchasePrice(899.99);
-        equipment2.setStockQuantity(5);
-        equipment2.setCategory("Respiratory");
-        equipment2.setSafetyStandard("ISO 80601-2-69");
-
-        List<Equipment> equipment = equipmentRepository.saveAll(List.of(equipment1, equipment2));
+        List<Equipment> equipment = equipmentRepository.findAll();
 
         // Create Purchases
         Purchase purchase1 = new Purchase();
@@ -154,5 +136,152 @@ public class TestDataLoader implements CommandLineRunner {
         invoice2.setFilePath("/invoices/INV-2023-002.pdf");
 
         invoiceRepository.saveAll(List.of(invoice1, invoice2));
+    }
+
+    private void seedEquipmentCatalog() {
+        List<Equipment> existingEquipment = equipmentRepository.findAll();
+        List<String> existingNames = existingEquipment.stream()
+                .map(Equipment::getName)
+                .map(name -> name.toLowerCase(Locale.ROOT))
+                .toList();
+
+        List<Equipment> catalog = new ArrayList<>();
+        addIfMissing(catalog, existingNames, createEquipment(
+                "Wheelchair Standard",
+                "Mobility",
+                "ISO 7176-1",
+                69.76,
+                199.99,
+                100,
+                "Standard wheelchair for adult patients with foldable frame and reinforced wheels."
+        ));
+        addIfMissing(catalog, existingNames, createEquipment(
+                "Oxygen Concentrator 5L",
+                "Respiratory",
+                "ISO 80601-2-69",
+                209.36,
+                899.99,
+                60,
+                "Stationary oxygen concentrator with nebulizer support for clinics and home-care needs."
+        ));
+        addIfMissing(catalog, existingNames, createEquipment(
+                "Patient Monitor Pro",
+                "Monitoring",
+                "IEC 60601-1",
+                180.00,
+                1450.00,
+                24,
+                "Multi-parameter monitor for ECG, SpO2, non-invasive blood pressure and temperature tracking."
+        ));
+        addIfMissing(catalog, existingNames, createEquipment(
+                "Infusion Pump SmartFlow",
+                "Infusion",
+                "IEC 60601-2-24",
+                95.00,
+                790.00,
+                40,
+                "Programmable infusion pump designed for precise flow control in hospital wards and treatment rooms."
+        ));
+        addIfMissing(catalog, existingNames, createEquipment(
+                "Hospital Bed Electric Comfort",
+                "Hospital Furniture",
+                "IEC 60601-2-52",
+                140.00,
+                1290.00,
+                18,
+                "Electric medical bed with adjustable height, backrest and leg support for inpatient care."
+        ));
+        addIfMissing(catalog, existingNames, createEquipment(
+                "Suction Unit Portable",
+                "Respiratory",
+                "ISO 10079-1",
+                75.00,
+                420.00,
+                35,
+                "Portable medical suction device for emergency rooms, ambulances and minor procedure areas."
+        ));
+        addIfMissing(catalog, existingNames, createEquipment(
+                "ECG Machine 12 Lead",
+                "Diagnostics",
+                "IEC 60601-2-25",
+                155.00,
+                1180.00,
+                22,
+                "Twelve-lead electrocardiograph with integrated printer for routine cardiac assessment."
+        ));
+        addIfMissing(catalog, existingNames, createEquipment(
+                "Defibrillator Rescue AED",
+                "Emergency",
+                "IEC 60601-2-4",
+                260.00,
+                2100.00,
+                14,
+                "Automated external defibrillator for rapid emergency response in public or clinical settings."
+        ));
+        addIfMissing(catalog, existingNames, createEquipment(
+                "Ultrasound Portable Scan",
+                "Imaging",
+                "IEC 60601-2-37",
+                320.00,
+                4200.00,
+                10,
+                "Portable ultrasound platform suitable for point-of-care imaging and bedside examinations."
+        ));
+        addIfMissing(catalog, existingNames, createEquipment(
+                "Examination Table Premium",
+                "Consultation Room",
+                "EN 60601-1",
+                55.00,
+                390.00,
+                30,
+                "Adjustable examination table for consultation rooms, outpatient care and general practice."
+        ));
+        addIfMissing(catalog, existingNames, createEquipment(
+                "Nebulizer Compact Air",
+                "Respiratory",
+                "EN 13544-1",
+                35.00,
+                140.00,
+                80,
+                "Compact nebulizer system for aerosol therapy with reliable daily performance."
+        ));
+        addIfMissing(catalog, existingNames, createEquipment(
+                "Sterilizer Autoclave 23L",
+                "Sterilization",
+                "EN 13060",
+                210.00,
+                1890.00,
+                12,
+                "Class B autoclave for sterilization of instruments in practices, labs and procedure rooms."
+        ));
+
+        if (!catalog.isEmpty()) {
+            equipmentRepository.saveAll(catalog);
+        }
+    }
+
+    private void addIfMissing(List<Equipment> catalog, List<String> existingNames, Equipment equipment) {
+        if (!existingNames.contains(equipment.getName().toLowerCase(Locale.ROOT))) {
+            catalog.add(equipment);
+        }
+    }
+
+    private Equipment createEquipment(String name,
+                                      String category,
+                                      String safetyStandard,
+                                      double dailyRentalPrice,
+                                      double purchasePrice,
+                                      int stockQuantity,
+                                      String description) {
+        Equipment equipment = new Equipment();
+        equipment.setName(name);
+        equipment.setCategory(category);
+        equipment.setSafetyStandard(safetyStandard);
+        equipment.setDailyRentalPrice(dailyRentalPrice);
+        equipment.setPurchasePrice(purchasePrice);
+        equipment.setStockQuantity(stockQuantity);
+        equipment.setDescription(description);
+        equipment.setActive(true);
+        return equipment;
     }
 }

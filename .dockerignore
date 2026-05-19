@@ -1,8 +1,8 @@
-target
 .git
-.gitignore
 .idea
-.vscode
-invoices
-*.iml
-*.log
+target
+frontend/node_modules
+frontend/.next
+frontend/.idea
+frontend/tsconfig.tsbuildinfo
+.DS_Store

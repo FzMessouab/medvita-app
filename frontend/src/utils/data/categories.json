@@ -1,0 +1,50 @@
+[
+    {
+        "name": "Apnée du sommeil",
+        "img": "/images/Ellipse 2.png"
+    },
+    {
+        "name": "Dispositifs médicaux",
+        "img": "/images/dispo.png"
+    },
+    {
+        "name": "Soins à domicile",
+        "img": "/images/soins.png"
+    },
+    {
+        "name": "Équipement hospitalier",
+        "img": "/images/Equipement.png"
+    },
+    {
+        "name": "Soins orthopédiques",
+        "img": "/images/Ortho.png"
+    },
+    {
+        "name": "Appareils auditifs",
+        "img": "/images/Appareil.png"
+    },
+    {
+        "name": "Diagnostics",
+        "img": "/images/Diagnostic.png"
+    },
+    {
+        "name": "Mobilier hospitalier",
+        "img": "/images/Mobilier.png"
+    },
+    {
+        "name": "Endoscopie",
+        "img": "/images/Endo.svg"
+    },
+    {
+        "name": "Physiothérapie",
+        "img": "/images/Physo.svg"
+    },
+        {
+        "name": "Endoscopie",
+        "img": "/images/Endo.svg"
+    },
+    {
+        "name": "Physiothérapie",
+        "img": "/images/Physo.svg"
+    }
+]

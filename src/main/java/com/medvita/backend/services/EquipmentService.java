@@ -36,6 +36,15 @@ public class EquipmentService extends AbstractService<Equipment,
         return equipmentRepository.findAllByActiveTrue();
     }
 
+    public List<String> getAllCategories() {
+        return equipmentRepository.findAllActiveCategories();
+    }
+
+    public Equipment getByName(String name) {
+        return equipmentRepository.findActiveByName(name)
+                .orElseThrow(() -> new RuntimeException("Equipement non trouve: " + name));
+    }
+
     public void checkEquipmentAvailability(Long equipmentId, int quantity) {
         Equipment equipment = getById(equipmentId);
         if (equipment.getStockQuantity() < quantity) {

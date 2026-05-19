@@ -10,6 +10,7 @@ import org.mapstruct.*;
 public interface PurchaseMapper {
     Purchase toEntity(PurchaseRequestDTO dto);
 
+    @Mapping(target = "invoiceNumber", source = "invoice.invoiceNumber")
     PurchaseResponseDTO toDto(Purchase entity);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

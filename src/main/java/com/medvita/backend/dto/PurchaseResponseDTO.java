@@ -10,4 +10,6 @@ public class PurchaseResponseDTO extends BaseResponseDTO {
     private Long equipmentId;
     private int quantity;
     private String paymentMethod; // "CARTE", "VIREMENT", "ESPÈCES"
+    private String invoiceNumber;
+    private InvoiceResponseDTO invoice;
 }

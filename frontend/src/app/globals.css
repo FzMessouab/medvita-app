@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+:root {
+    --background: #f5f7fb;
+    --surface: rgba(255, 255, 255, 0.88);
+    --text: #11203d;
+    --muted: #5f6f8f;
+    --border: rgba(17, 32, 61, 0.1);
+    --shadow: 0 24px 80px rgba(17, 32, 61, 0.12);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    color: var(--text);
+    background:
+        radial-gradient(circle at top, rgba(15, 79, 168, 0.12), transparent 34%),
+        linear-gradient(180deg, #f9fbff 0%, #eef3f8 100%);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.app-shell::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 15% 20%, rgba(242, 140, 56, 0.12), transparent 25%),
+        radial-gradient(circle at 85% 10%, rgba(15, 79, 168, 0.12), transparent 20%);
+    z-index: -1;
+}
+
+.bg-radial-custom {
+    background-image: radial-gradient(at top left, #EAF3FF 0%, #FCEEEB 100%);
+}
+
+.glass-panel {
+    background: var(--surface);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+}
+
+.section-title {
+    font-size: clamp(1.8rem, 3vw, 3rem);
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+}
+
+.section-copy {
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+.payment-method {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #000;
+    margin-bottom: 14px;
+    padding: 22px 16px;
+    padding-left: 42px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.payment-method:has(input[type="radio"]:checked) {
+    background-color: #f9fafb;
+}
+
+.payment-method.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.payment-method input[type="radio"] {
+    position: absolute;
+    left: 16px;
+    top: 25px;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    -webkit-print-color-adjust: exact;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border: 1.5px solid #d8dadf;
+
+    vertical-align: top;
+
+    box-shadow: none;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background-color: #fff;
+}
+
+.payment-method input[type="radio"]:checked {
+    background-image: url("/assets/check.svg");
+    background-size: 63%;
+    background-color: #d8dadf;
+    border-color: #d8dadf;
+}
